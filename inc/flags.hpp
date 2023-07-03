@@ -11,13 +11,13 @@ public:
     // Ctors
     ProgramFlags();
 
-    // Accessors
+    // Accessors; sets member variables
     void set_silence (bool is)          { is_silent = is; }
     void set_rom_dir (std::string dir)  { rom_dir = dir; }
     void set_hash_dir (std::string dir) { hash_dir = dir; }
     void set_error_state (bool err)     { error_state = err; }
 
-    // Mutators
+    // Mutators; gets member variables
     bool get_silence()         { return is_silent; }
     std::string get_rom_dir()  { return rom_dir; }
     std::string get_hash_dir() { return hash_dir; }

@@ -1,13 +1,11 @@
 #include "flags.hpp"
 
 
-#include <iostream>
-
-
 ProgramFlags::ProgramFlags()
 {
     is_silent = false;
-    rom_dir = hash_dir = "";
+    rom_dir = "roms";
+    hash_dir = "hashes";
     error_state = false;
 }
 
@@ -29,6 +27,7 @@ void handle_flags (int argc, char** argv, ProgramFlags& p_state)
          */
         else if ((arg == "-r") || (arg == "-h"))
         {
+            // There are still arguments after the current one
             if ((i + 1) < (unsigned int)argc)
             {
                 if (arg == "-r")
@@ -37,6 +36,7 @@ void handle_flags (int argc, char** argv, ProgramFlags& p_state)
                     p_state.set_hash_dir (argv[i + 1]);
                 i++;
             }
+            // No more arguments, which does not work for -r and -h
             else
             {
                 std::cerr << "Missing argument for " + arg + "!" << std::endl;

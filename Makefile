@@ -8,13 +8,22 @@ BLD=./build
 TARGET=hash
 
 
-all: main.o flags.o rom.o
+all: $(TARGET)
 
-main.o: $(SRC)/main.cpp $(INC)/flags.hpp
-	$(CXX) $(CXXFLAGS) $< -o $(BLD)/$@.o -I$(INC)
+$(TARGET): $(BLD)/main.o $(BLD)/flags.o $(BLD)/rom.o
+	g++ $^ -o $(BLD)/$(TARGET) -l:libcryptopp.a
 
-flags.o: $(SRC)/flags.cpp $(INC)/flags.hpp
-	$(CXX) $(CXXFLAGS) $< -o $(BLD)/$@.o -I$(INC)
+$(BLD)/main.o: $(SRC)/main.cpp $(INC)/flags.hpp
+	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
 
-rom.o: $(SRC)/rom.cpp $(INC)/rom.hpp
-	$(CXX) $(CXXFLAGS) $< -o $(BLD)/$@.o -I$(INC)
+$(BLD)/flags.o: $(SRC)/flags.cpp $(INC)/flags.hpp
+	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
+
+$(BLD)/rom.o: $(SRC)/rom.cpp $(INC)/rom.hpp
+	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC) -l:libcryptopp.a
+
+clean:
+	rm -rf ./build/*
+
+run:
+	$(BLD)/$(TARGET)
