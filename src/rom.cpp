@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+// === Ctors =======================================================================================
+
 Rom::Rom()
 {
     // File metadata
@@ -18,8 +20,12 @@ Rom::Rom()
 Rom::Rom (std::string file)
 {
     file_name = file;
-
+    calculate_file_size();
+    calculate_hashes();
 }
+
+
+// === Member methods ==============================================================================
 
 
 /**
@@ -69,9 +75,14 @@ void Rom::calculate_file_size()
     std::ifstream f_size_read (file_name.c_str());
     if (f_size_read.is_open())
     {
+        /**
+         * Note: This method *should* be cross-platform, but I make no guarantees. At the very
+         * least it doesn't require setting up defines at the moment for Windows/Linux differences.
+         * "Under the hood" implementation of seekg/tellg may make this not work right for you.
+         */
         f_size_read.seekg (0, std::ios::end);
         file_size = (uint64_t) f_size_read.tellg();
-        f_size_read.close();
+        f_size_read.close();                        
     }
     else
     {

@@ -10,6 +10,7 @@ class ProgramFlags
 public:
     // Ctors
     ProgramFlags();
+    ProgramFlags(std::string, std::string, bool);
 
     // Accessors; sets member variables
     void set_silence (bool is)          { is_silent = is; }
@@ -23,6 +24,9 @@ public:
     std::string get_hash_dir() { return hash_dir; }
     bool get_error_state()     { return error_state; }
 
+    // Member methods
+    void handle_arguments (int, char**);
+
 private:
     // Flags
     bool is_silent; // Program will only print out non-matching hashes
@@ -34,8 +38,5 @@ private:
     // Error-related
     bool error_state;       // Severe error in program has been encountered
 };
-
-
-void handle_flags (int, char**, ProgramFlags&);
 
 #endif

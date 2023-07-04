@@ -1,25 +1,40 @@
 #include "flags.hpp"
 
+// === Ctors =======================================================================================
 
 ProgramFlags::ProgramFlags()
 {
     is_silent = false;
+    // Default directories
     rom_dir = "roms";
     hash_dir = "hashes";
     error_state = false;
 }
 
-
-void handle_flags (int argc, char** argv, ProgramFlags& p_state)
+ProgramFlags::ProgramFlags (std::string r_dir, std::string h_dir, bool silence)
 {
-    std::string arg;
-    for (unsigned int i = 0; i < (unsigned int)argc; i++)
+    rom_dir = r_dir;
+    hash_dir = h_dir;
+    is_silent = silence;
+
+    error_state = false;
+}
+
+
+// === Member methods ==============================================================================
+
+
+void ProgramFlags::handle_arguments (int argc, char** argv)
+{
+    std::string arg = "";
+    unsigned int u_argc = (unsigned int)argc;
+    for (unsigned int i = 0; i < u_argc; i++)
     {
         arg = argv[i];
         // Argument -s: Silent mode
         if (arg == "-s")
         {
-            p_state.set_silence (true);
+            is_silent = true;
         }
         /*
          * Argument -r: Specify ROM directory
@@ -31,16 +46,16 @@ void handle_flags (int argc, char** argv, ProgramFlags& p_state)
             if ((i + 1) < (unsigned int)argc)
             {
                 if (arg == "-r")
-                    p_state.set_rom_dir (argv[i + 1]);
+                    rom_dir = (argv[i + 1]);
                 else if (arg == "-h")
-                    p_state.set_hash_dir (argv[i + 1]);
+                    hash_dir = (argv[i + 1]);
                 i++;
             }
             // No more arguments, which does not work for -r and -h
             else
             {
                 std::cerr << "Missing argument for " + arg + "!" << std::endl;
-                p_state.set_error_state (true);
+                error_state = true;
                 break;
             }
         }
