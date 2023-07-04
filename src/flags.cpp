@@ -32,7 +32,7 @@ void ProgramFlags::handle_arguments (int argc, char** argv)
     {
         arg = argv[i];
         // Argument -s: Silent mode
-        if (arg == "-s")
+        if ((arg == "-s") || (arg == "--silent"))
         {
             is_silent = true;
         }
@@ -40,14 +40,15 @@ void ProgramFlags::handle_arguments (int argc, char** argv)
          * Argument -r: Specify ROM directory
          * Argument -h: Specify hash file directory
          */
-        else if ((arg == "-r") || (arg == "-h"))
+        // TODO: Implement --roms=[dir] and --files=[dir]
+        else if ((arg == "-r") || (arg == "-f"))
         {
             // There are still arguments after the current one
             if ((i + 1) < (unsigned int)argc)
             {
                 if (arg == "-r")
                     rom_dir = (argv[i + 1]);
-                else if (arg == "-h")
+                else if (arg == "-f")
                     hash_dir = (argv[i + 1]);
                 i++;
             }
@@ -58,6 +59,12 @@ void ProgramFlags::handle_arguments (int argc, char** argv)
                 error_state = true;
                 break;
             }
+        }
+        else if ((arg == "-u") || (arg == "--usage") ||
+                 (arg == "-h") || (arg == "--help"))
+        {
+            error_state = true;
+            break;
         }
     }
 }

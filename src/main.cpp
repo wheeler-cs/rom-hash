@@ -1,4 +1,5 @@
 #include "flags.hpp"
+#include "interface.hpp"
 #include "rom.hpp"
 
 int main (int argc, char** argv)
@@ -12,6 +13,10 @@ int main (int argc, char** argv)
         test.calculate_hashes();
         test.calculate_file_size();
         test.print_hashes();
+    }
+    else
+    {
+        print_program_usage();
     }
 
     return 0;

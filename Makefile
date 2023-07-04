@@ -10,13 +10,16 @@ TARGET=hash
 
 all: $(TARGET)
 
-$(TARGET): $(BLD)/main.o $(BLD)/flags.o $(BLD)/rom.o
+$(TARGET): $(BLD)/main.o $(BLD)/flags.o $(BLD)/interface.o $(BLD)/rom.o
 	g++ $^ -o $(BLD)/$(TARGET) -l:libcryptopp.a
 
-$(BLD)/main.o: $(SRC)/main.cpp $(INC)/flags.hpp
+$(BLD)/main.o: $(SRC)/main.cpp $(INC)/flags.hpp $(INC)/interface.hpp $(INC)/rom.hpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
 
 $(BLD)/flags.o: $(SRC)/flags.cpp $(INC)/flags.hpp
+	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
+
+$(BLD)/interface.o: $(SRC)/interface.cpp $(INC)/interface.hpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
 
 $(BLD)/rom.o: $(SRC)/rom.cpp $(INC)/rom.hpp
