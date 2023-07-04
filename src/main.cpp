@@ -10,7 +10,7 @@ int main (int argc, char** argv)
         Rom test;
         test.set_file_name ("Makefile");
         test.calculate_hashes();
-        std::cout << test.get_crc() << std::endl;
+        test.print_hashes();
     }
 
     return 0;
