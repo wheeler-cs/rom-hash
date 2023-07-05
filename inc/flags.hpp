@@ -36,7 +36,7 @@ private:
     std::string hash_dir;   // Directory containing files with rom hashes
 
     // Error-related
-    bool error_state;       // Severe error in program has been encountered
+    bool error_state;       // Severe error in program has been encountered or exit should occur
 };
 
 #endif

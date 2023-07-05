@@ -24,12 +24,19 @@ ProgramFlags::ProgramFlags (std::string r_dir, std::string h_dir, bool silence)
 // === Member methods ==============================================================================
 
 
+/**
+ * @fn ProgramFlags::handle_arguments
+ * @brief Sets program flags based on arguments passed in upon inital execution.
+ * 
+ * @note If var `error_state` is set, program will exit after function execution.
+ */
 void ProgramFlags::handle_arguments (int argc, char** argv)
 {
     std::string arg = "";
-    unsigned int u_argc = (unsigned int)argc;
-    for (unsigned int i = 0; i < u_argc; i++)
+    unsigned int u_argc = (unsigned int)argc;   // Cast argc to uint once and store in var
+    for (unsigned int i = 1; i < u_argc; i++)
     {
+        // Get each argument and check if it has some meaningful representation
         arg = argv[i];
         // Argument -s: Silent mode
         if ((arg == "-s") || (arg == "--silent"))
@@ -37,22 +44,26 @@ void ProgramFlags::handle_arguments (int argc, char** argv)
             is_silent = true;
         }
         /*
-         * Argument -r: Specify ROM directory
-         * Argument -h: Specify hash file directory
+         * Argument -r, --roms: Specify ROM directory
+         * Argument -h, --files: Specify hash file directory
          */
-        // TODO: Implement --roms=[dir] and --files=[dir]
-        else if ((arg == "-r") || (arg == "-f"))
+        else if ((arg == "-r") || (arg == "--roms") ||
+                 (arg == "-f") || (arg == "--files"))
         {
             // There are still arguments after the current one
             if ((i + 1) < (unsigned int)argc)
             {
-                if (arg == "-r")
+                if ((arg == "-r") || (arg == "--roms"))
+                {
                     rom_dir = (argv[i + 1]);
-                else if (arg == "-f")
+                }
+                else if ((arg == "-f") || (arg == "--files"))
+                {
                     hash_dir = (argv[i + 1]);
+                }
                 i++;
             }
-            // No more arguments, which does not work for -r and -h
+            // No more arguments in argv, which does not work for -r and -h
             else
             {
                 std::cerr << "Missing argument for " + arg + "!" << std::endl;
@@ -60,6 +71,9 @@ void ProgramFlags::handle_arguments (int argc, char** argv)
                 break;
             }
         }
+        /*
+         * Argument: -u, --usage, -h, --help: Print a "usage" menu and exit program
+         */
         else if ((arg == "-u") || (arg == "--usage") ||
                  (arg == "-h") || (arg == "--help"))
         {

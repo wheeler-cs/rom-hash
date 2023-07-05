@@ -20,6 +20,7 @@ Rom::Rom()
 Rom::Rom (std::string file)
 {
     file_name = file;
+    // Go ahead and calculate hashes and file size
     calculate_file_size();
     calculate_hashes();
 }
