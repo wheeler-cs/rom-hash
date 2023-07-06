@@ -3,6 +3,8 @@
 #include "interface.hpp"
 #include "rom.hpp"
 
+#include <iostream>
+
 int main (int argc, char** argv)
 {
     ProgramFlags p_flags;
