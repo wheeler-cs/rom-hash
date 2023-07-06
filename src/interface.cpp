@@ -12,3 +12,8 @@ void print_program_usage()
               << "\n\t-f [dir], --files=[dir]\t\tSpecify the directory hash files are located in."
               << std::endl;
 }
+
+void print_error (std::string error)
+{
+    std::cerr << error << std::endl;
+}

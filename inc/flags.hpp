@@ -1,7 +1,6 @@
 #ifndef FLAGS_HPP
 #define FLAGS_HPP
 
-#include <iostream>
 #include <string>
 
 

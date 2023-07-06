@@ -1,4 +1,7 @@
 #include "files.hpp"
+#include "interface.hpp"
+
+#include <iostream>
 
 
 #if defined(__unix)
@@ -39,6 +42,10 @@ unsigned int gen_dir_index (std::string input_dir, std::vector<std::string>& dir
 
         // Indexing operation complete
         closedir (dir_ptr);
+    }
+    else
+    {
+        print_error ("Something went wrong trying to open " + input_dir + " as a directory!");
     }
 
     return dir_index.size();

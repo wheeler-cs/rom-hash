@@ -1,5 +1,7 @@
 #include "flags.hpp"
 
+#include <iostream>
+
 // === Ctors =======================================================================================
 
 ProgramFlags::ProgramFlags()

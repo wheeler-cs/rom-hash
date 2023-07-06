@@ -16,6 +16,7 @@
 #include <string>
 #include <vector>
 
+
 unsigned int gen_dir_index (std::string, std::vector<std::string>&);
 
 #endif
