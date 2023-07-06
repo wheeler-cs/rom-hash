@@ -3,6 +3,10 @@
 #include <iostream>
 
 
+/**
+ * @fn print_program_usage
+ * @brief Prints a message on how to use the program and its various switches.
+ */
 void print_program_usage()
 {
     std::cout << "\nUsage: hash [options]"
@@ -13,6 +17,10 @@ void print_program_usage()
               << std::endl;
 }
 
+/**
+ * @fn print_error
+ * @brief Prints an error message and clears the output buffer.
+ */
 void print_error (std::string error)
 {
     std::cerr << error << std::endl;

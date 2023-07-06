@@ -7,7 +7,7 @@
 #if defined(__unix)
 // === Unix ========================================================================================
 
-unsigned int gen_dir_index (std::string input_dir, std::vector<std::string>& dir_index)
+unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
 {
     DIR* dir_ptr;
     struct dirent* dir_entity;
@@ -35,7 +35,7 @@ unsigned int gen_dir_index (std::string input_dir, std::vector<std::string>& dir
                 // Add path to list if refers to file
                 else if (f_info.st_mode & S_IFREG)
                 {
-                    dir_index.push_back (full_path);
+                    dir_index.push_back (Rom(full_path));
                 }
             }
         }

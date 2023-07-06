@@ -9,12 +9,12 @@ int main (int argc, char** argv)
 {
     ProgramFlags p_flags;
     p_flags.handle_arguments (argc, argv);
-    if (!(p_flags.get_error_state()))
+    if (!(p_flags.get_exit_state()))
     {
-        std::vector<std::string> test_v;
-        gen_dir_index ("src", test_v);
-        for (unsigned int i = 0; i < test_v.size(); i++)
-            std::cout << test_v[i] << '\n';
+        std::vector<Rom> rom_index;
+        gen_dir_index (p_flags.get_rom_dir(), rom_index);
+        for (unsigned int i = 0; i < rom_index.size(); i++)
+            rom_index[i].print_hashes();
     }
     else
     {

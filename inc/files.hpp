@@ -12,10 +12,12 @@
 
 #endif
 
+#include "rom.hpp"
+
 #include <string>
 #include <vector>
 
 
-unsigned int gen_dir_index (std::string, std::vector<std::string>&);
+unsigned int gen_dir_index (std::string, std::vector<Rom>&);
 
 #endif

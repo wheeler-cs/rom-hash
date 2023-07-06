@@ -10,7 +10,7 @@ ProgramFlags::ProgramFlags()
     // Default directories
     rom_dir = "roms";
     hash_dir = "hashes";
-    error_state = false;
+    exit_state = false;
 }
 
 ProgramFlags::ProgramFlags (std::string r_dir, std::string h_dir, bool silence)
@@ -19,7 +19,7 @@ ProgramFlags::ProgramFlags (std::string r_dir, std::string h_dir, bool silence)
     hash_dir = h_dir;
     is_silent = silence;
 
-    error_state = false;
+    exit_state = false;
 }
 
 
@@ -69,7 +69,7 @@ void ProgramFlags::handle_arguments (int argc, char** argv)
             else
             {
                 std::cerr << "Missing argument for " + arg + "!" << std::endl;
-                error_state = true;
+                exit_state = true;
                 break;
             }
         }
@@ -79,7 +79,7 @@ void ProgramFlags::handle_arguments (int argc, char** argv)
         else if ((arg == "-u") || (arg == "--usage") ||
                  (arg == "-h") || (arg == "--help"))
         {
-            error_state = true;
+            exit_state = true;
             break;
         }
     }
