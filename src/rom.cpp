@@ -105,7 +105,7 @@ void Rom::calculate_file_size()
  * @fn Rom::print_hashes
  * @brief Prints metadata and hash information about a file.
  */
-void Rom::print_hashes()
+void Rom::print_hashes() const
 {
     std::cout << "\nFile: " << file_name
               << "\nSize: " << file_size
@@ -113,4 +113,97 @@ void Rom::print_hashes()
               << "\nSHA1: " << sha1
               << "\n MD5: " << md5
               << std::endl;
+}
+
+
+// === Operator overloads ==========================================================================
+
+
+/**
+ * @overload ==
+ */
+bool operator== (const Rom& a, const Rom& b)
+{
+    /*
+     * CRC, MD5, SHA1, and file size should match; file names do not necessarily have to match as
+     * this is looking for metadata equality as opposed to literal equality
+     */
+    if ((a.crc == b.crc) &&
+        (a.md5 == b.md5) &&
+        (a.sha1 == b.sha1) &&
+        (a.file_size == b.file_size))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
+/**
+ * @overload >
+ */
+bool operator> (const Rom& a, const Rom& b)
+{
+    /*
+     * Attributes are evaluated in the following order:
+     *  -CRC
+     *  -MD5
+     *  -SHA1
+     *  -File size
+     */
+    if (a.crc > b.crc)
+        return true;
+    else if (a.crc == b.crc)
+    {
+        if (a.md5 > b.md5)
+            return true;
+        else if (a.md5 == b.md5)
+        {
+            if (a.sha1 > b.sha1)
+                return true;
+            else if (a.sha1 == b.sha1)
+            {
+                if (a.file_size > b.file_size)
+                    return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+/**
+ * @overload <
+ */
+bool operator< (const Rom& a, const Rom& b)
+{
+    /*
+     * Attributes are evaluated in the following order:
+     *  -CRC
+     *  -MD5
+     *  -SHA1
+     *  -File size
+     */
+    if (a.crc < b.crc)
+        return true;
+    else if (a.crc == b.crc)
+    {
+        if (a.md5 < b.md5)
+            return true;
+        else if (a.md5 == b.md5)
+        {
+            if (a.sha1 < b.sha1)
+                return true;
+            else if (a.sha1 == b.sha1)
+            {
+                if (a.file_size < b.file_size)
+                    return true;
+            }
+        }
+    }
+    
+    return false;
 }

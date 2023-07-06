@@ -10,10 +10,10 @@ TARGET=hash
 
 all: $(TARGET)
 
-$(TARGET): $(BLD)/main.o $(BLD)/files.o $(BLD)/flags.o $(BLD)/interface.o $(BLD)/rom.o
+$(TARGET): $(BLD)/main.o $(BLD)/files.o $(BLD)/flags.o $(BLD)/interface.o $(BLD)/rom.o $(BLD)/xml.o
 	g++ $^ -o $(BLD)/$(TARGET) -l:libcryptopp.a
 
-$(BLD)/main.o: $(SRC)/main.cpp $(INC)/files.hpp $(INC)/flags.hpp $(INC)/interface.hpp $(INC)/rom.hpp
+$(BLD)/main.o: $(SRC)/main.cpp $(INC)/files.hpp $(INC)/flags.hpp $(INC)/interface.hpp $(INC)/rom.hpp $(INC)/xml.hpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
 
 $(BLD)/files.o: $(SRC)/files.cpp $(INC)/files.hpp $(INC)/interface.hpp $(INC)/rom.hpp
@@ -27,6 +27,9 @@ $(BLD)/interface.o: $(SRC)/interface.cpp $(INC)/interface.hpp
 
 $(BLD)/rom.o: $(SRC)/rom.cpp $(INC)/rom.hpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC) -l:libcryptopp.a
+
+$(BLD)/xml.o: $(SRC)/xml.cpp $(INC)/rom.hpp $(INC)/xml.hpp
+	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
 
 clean:
 	rm -rf ./build/*
