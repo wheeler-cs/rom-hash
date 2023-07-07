@@ -33,7 +33,7 @@ public:
     void calculate_file_size();
     void print_hashes() const;
 
-    // Operator overloads (as friends)
+    // Operator overloads (as friends); allows using things such as "sort" with class
     friend bool operator== (const Rom&, const Rom&);
     friend bool operator> (const Rom&, const Rom&);
     friend bool operator< (const Rom&, const Rom&);
