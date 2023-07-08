@@ -23,6 +23,8 @@ int main (int argc, char** argv)
             xml_data.print_rom (i);
         */
         xml_data.import_xml (p_flags.get_hash_dir() + "/NoIntro - GBA.dat");
+        Rom test = xml_data.find_crc ("1f1c08fb");
+        test.print_hashes();
     }
     else
     {
