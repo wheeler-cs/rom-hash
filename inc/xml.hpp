@@ -37,6 +37,8 @@ public:
 
     // Member methods
     bool import_xml (const std::string &);
+    bool validate_xml (const std::string &);
+    bool get_metadata_header (const std::string &);
     unsigned int append_rom (const Rom &);
     void sort_data();
     Rom find_crc (const std::string &);
@@ -55,9 +57,7 @@ private:
 };
 
 
-bool validate_xml (const std::string &, Xml &);
 bool check_xml_header (const std::string &);
-bool get_metadata_header (const std::string &, Xml &);
 std::string search_metadata_header (const std::string &, const std::string &);
 
 #endif

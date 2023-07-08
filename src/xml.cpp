@@ -35,7 +35,52 @@ bool Xml::import_xml (const std::string &f_name)
         }
         xml_read.close();
 
-        validate_xml (file_text, *this);
+        if (validate_xml (file_text))
+        {
+
+        }
+        else
+        {
+            std::cerr << "Could not parse " << file_name << "!" << std::endl;
+        }
+    }
+
+    return false;
+}
+
+/**
+ * 
+ */
+bool Xml::validate_xml (const std::string &text)
+{
+    // Make sure the XML file has both the file header and <header> sections
+    return (check_xml_header (text) && get_metadata_header (text));
+}
+
+/**
+ * 
+ */
+bool Xml::get_metadata_header (const std::string &text)
+{
+    std::size_t header_start, header_end;
+
+    header_start = text.find ("<header>");
+    header_end = text.find ("</header>");
+
+    // Sanity check
+    if ((header_start != std::string::npos) &&
+        (header_end != std::string::npos) &&
+        (header_start < header_end))
+    {
+        // Create a substring that only contains <header> ... </header> information
+        std::string meta_header = text.substr (header_start, header_end);
+
+        set_name (search_metadata_header ("name", meta_header));
+        set_description (search_metadata_header ("description", meta_header));
+        set_author (search_metadata_header ("author", meta_header));
+        set_homepage (search_metadata_header ("homepage", meta_header));
+
+        return true;
     }
 
     return false;
@@ -124,14 +169,7 @@ void Xml::print_header()
 // === Functions ===================================================================================
 
 
-/**
- * 
- */
-bool validate_xml (const std::string &text, Xml &xml)
-{
-    // Make sure the XML file has both the file header and <header> sections
-    return (check_xml_header (text) && get_metadata_header (text, xml));
-}
+
 
 /**
  * @fn check_xml_header
@@ -142,34 +180,7 @@ bool check_xml_header (const std::string & text)
     return (text.substr (0, XML_HEADER.size()) == XML_HEADER);
 }
 
-/**
- * 
- */
-bool get_metadata_header (const std::string &text, Xml &xml)
-{
-    std::size_t header_start, header_end;
 
-    header_start = text.find ("<header>");
-    header_end = text.find ("</header>");
-
-    // Sanity check
-    if ((header_start != std::string::npos) &&
-        (header_end != std::string::npos) &&
-        (header_start < header_end))
-    {
-        // Create a substring that only contains <header> ... </header> information
-        std::string meta_header = text.substr (header_start, header_end);
-
-        xml.set_name (search_metadata_header ("name", meta_header));
-        xml.set_description (search_metadata_header ("description", meta_header));
-        xml.set_author (search_metadata_header ("author", meta_header));
-        xml.set_homepage (search_metadata_header ("homepage", meta_header));
-
-        return true;
-    }
-
-    return false;
-}
 
 /**
  * 
@@ -190,3 +201,7 @@ std::string search_metadata_header (const std::string &tag, const std::string &h
 
     return ret_str;
 }
+
+/**
+ * 
+ */
