@@ -4,6 +4,7 @@
 #include "rom.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <vector>
 
 
@@ -41,9 +42,9 @@ public:
     bool get_metadata_header (const std::string &);
     unsigned int append_rom (const Rom &);
     void sort_data();
-    Rom find_crc (const std::string &);
-    Rom find_md5 (const std::string &);
-    Rom find_sha (const std::string &);
+    Rom find_crc (std::string);
+    Rom find_md5 (std::string);
+    Rom find_sha (std::string);
     void print_rom (unsigned int);
     void print_header();
 

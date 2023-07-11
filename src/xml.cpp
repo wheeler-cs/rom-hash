@@ -37,7 +37,7 @@ bool Xml::import_xml (const std::string &f_name)
 
         if (validate_xml (file_text))
         {
-
+            // TODO: Read each <game> ... </game> entry into a Rom in imported_data
         }
         else
         {
@@ -106,16 +106,22 @@ void Xml::sort_data()
     sort (imported_data.begin(), imported_data.end());
 }
 
-Rom Xml::find_crc (const std::string &crc)
+Rom Xml::find_crc (std::string crc)
 {
     Rom ret_entry = Rom();
     std::string current_crc = "";
-    unsigned int low = 0, high = imported_data.size(), avg;
+    unsigned int low = 0, high = imported_data.size() - 1, avg = 0;
 
+    // Ensure given CRC is all uppercase
+    for (unsigned int i = 0; i < crc.size(); i++)
+        crc[i] = std::toupper (crc[i]);
+
+    // Binary search to find CRC value specified
     while (low < high)
     {
         avg = (low + high) / 2;
         current_crc = imported_data[avg].get_crc();
+        std::cout << current_crc << '\n';
 
         if (current_crc > crc)
             high = (avg - 1);
@@ -128,16 +134,15 @@ Rom Xml::find_crc (const std::string &crc)
         }
     }
 
-
     return ret_entry;
 }
 
-Rom Xml::find_md5 (const std::string &md5)
+Rom Xml::find_md5 (std::string md5)
 {
     return Rom(); // TODO: Placeholder
 }
 
-Rom Xml::find_sha (const std::string &sha)
+Rom Xml::find_sha (std::string sha)
 {
     return Rom(); // TODO: Placeholder
 }

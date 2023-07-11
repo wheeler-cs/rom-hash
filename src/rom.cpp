@@ -65,6 +65,25 @@ bool Rom::calculate_hashes()
         // Specify the file as a source and calculate hashes
         CryptoPP::FileSource (file_name.c_str(), true, new CryptoPP::Redirector (c_switch));
 
+        // Convert endian-ness of CRC
+        std::string bigram_a = "", bigram_b = "";
+
+        for (unsigned int i = 0; i < crc.size() / 2; i += 2)
+        {
+            bigram_a = crc[i];
+            bigram_a += crc[i + 1];
+
+            bigram_b = crc[crc.size() - (2 + i)];
+            bigram_b += crc[crc.size() - (1 + i)];
+
+            crc[i] = bigram_b[0];
+            crc[i + 1] = bigram_b[1];
+
+            crc[crc.size() - (2 + i)] = bigram_a[0];
+            crc[crc.size() - (1 + i)] = bigram_a[1];
+        }
+
+
         return true;
     }
     // Something really bad happened...
