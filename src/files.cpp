@@ -55,6 +55,41 @@ unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
 #elif defined(__WIN32)
 // === Windows =====================================================================================
 
-// TODO: Windows implementation of the above
+// TODO: Test this...
+unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
+{
+    WIN32_FIND_DATAA dat_find;
+    HANDLE f_handle = FindFirstFile ((input_dir + "/*.*").c_str(), &dat_find);
+
+    // Handle didn't find a valid directory
+    if (f_handle != INVALID_HANDLE_VALUE)
+    {
+        std::string dir_name = "";
+
+        do
+        {
+            // Directory found, recurse so long as directory isn't . or ..
+            if (dat_find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            {
+                dir_name = dat_find.cFileName; // Cast C-string to C++ string
+
+                if ((dir_name != ".") && (dir_name != ".."))
+                {
+                    gen_dir_index (input_dir + dir_name + '/', dir_index);
+                }
+            }
+            // File found, add it to the index
+            else
+            {
+                dir_name = input_dir + dat_find.cFileName;
+                dir_index.push_back (Rom(dir_name));
+            }
+        } while (FindNextFile (f_handle, &dat_find));
+
+        FindClose (f_handle);        
+    }
+
+    return dir_index.size();
+}
 
 #endif

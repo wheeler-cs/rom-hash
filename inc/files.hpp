@@ -8,7 +8,7 @@
 
 #elif defined(__WIN32)
 
-// ~ Windows API headers go here ~
+#include <Windows.h>
 
 #endif
 
