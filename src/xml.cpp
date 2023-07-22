@@ -106,6 +106,13 @@ void Xml::sort_data()
     sort (imported_data.begin(), imported_data.end());
 }
 
+/**
+ * @fn Xml::find_crc
+ * @brief Binary searches Rom entries for a matching CRC checksum.
+ * @pre The imported_data vector should be sorted by CRC.
+ * 
+ * @see Overloaded operators for Rom class.
+ */
 Rom Xml::find_crc (std::string crc)
 {
     Rom ret_entry = Rom();
@@ -121,7 +128,6 @@ Rom Xml::find_crc (std::string crc)
     {
         avg = (low + high) / 2;
         current_crc = imported_data[avg].get_crc();
-        std::cout << current_crc << '\n';
 
         if (current_crc > crc)
             high = (avg - 1);
@@ -137,14 +143,58 @@ Rom Xml::find_crc (std::string crc)
     return ret_entry;
 }
 
+/**
+ * @fn Xml::find_md5
+ * @brief Searches Rom entries for a matching MD5 checksum.
+ * 
+ * @note Linear searches imported_data as entries are sorted by CRC.
+ */
 Rom Xml::find_md5 (std::string md5)
 {
-    return Rom(); // TODO: Placeholder
+    Rom ret_entry = Rom();
+
+    // Ensure given MD5 is all uppercase
+    for (unsigned int i = 0; i < md5.size(); i++)
+        md5[i] = std::toupper (md5[i]);
+
+    // Linear search for given MD5
+    for (unsigned int entry = 0; entry < imported_data.size(); entry++)
+    {
+        if (imported_data[entry].get_md5() == md5)
+        {
+            ret_entry = imported_data[entry];
+            break;
+        }
+    }
+
+    return ret_entry;
 }
 
+/**
+ * @fn Xml::find_sha
+ * @brief Searches Rom entries for a matching SHA1 checksum.
+ * 
+ * @note Linear searches imported_data as entries are sorted by CRC.
+ */
 Rom Xml::find_sha (std::string sha)
 {
-    return Rom(); // TODO: Placeholder
+    Rom ret_entry = Rom();
+
+    // Ensure given SHA1 is all uppercase
+    for (unsigned int i = 0; i < sha.size(); i++)
+        sha[i] = std::toupper (sha[i]);
+
+    // Linear search for given SHA1
+    for (unsigned int entry = 0; entry < imported_data.size(); entry++)
+    {
+        if (imported_data[entry].get_sha() == sha)
+        {
+            ret_entry = imported_data[entry];
+            break;
+        }
+    }
+
+    return ret_entry;
 }
 
 /**
@@ -158,7 +208,8 @@ void Xml::print_rom (unsigned int index)
 }
 
 /**
- * 
+ * @fn Xml::print_header
+ * @brief Prints the header metadata relating to a loaded XML file.
  */
 void Xml::print_header()
 {
@@ -174,8 +225,6 @@ void Xml::print_header()
 // === Functions ===================================================================================
 
 
-
-
 /**
  * @fn check_xml_header
  * @brief Checks to make sure the expected header of XML_HEADER is at the start of the file.
@@ -185,10 +234,9 @@ bool check_xml_header (const std::string & text)
     return (text.substr (0, XML_HEADER.size()) == XML_HEADER);
 }
 
-
-
 /**
- * 
+ * @fn search_metadata_header
+ * @brief Searches an XML file for the text contained within a tag.
  */
 std::string search_metadata_header (const std::string &tag, const std::string &h_text)
 {
@@ -206,7 +254,3 @@ std::string search_metadata_header (const std::string &tag, const std::string &h
 
     return ret_str;
 }
-
-/**
- * 
- */
