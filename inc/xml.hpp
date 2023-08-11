@@ -38,27 +38,13 @@ public:
 
     // Member methods
     bool import_xml (const std::string &);
-    bool validate_xml (const std::string &);
-    bool get_metadata_header (const std::string &);
-    unsigned int append_rom (const Rom &);
-    void sort_data();
-    Rom find_crc (std::string);
-    Rom find_md5 (std::string);
-    Rom find_sha (std::string);
-    void print_rom (unsigned int);
-    void print_header();
 
 
 private:
-    std::string file_name;
-
     std::string name, description, author, homepage;
 
     std::vector <Rom> imported_data;
 };
 
-
-bool check_xml_header (const std::string &);
-std::string search_metadata_header (const std::string &, const std::string &);
 
 #endif

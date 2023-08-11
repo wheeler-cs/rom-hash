@@ -2,14 +2,6 @@
 
 #include <fstream>
 #include <iostream>
-#include "cryptopp/channels.h"
-#include "cryptopp/crc.h"
-#include "cryptopp/cryptlib.h"
-#include "cryptopp/files.h"
-#include "cryptopp/filters.h"
-#include "cryptopp/hex.h"
-#include "cryptopp/md5.h"
-#include "cryptopp/sha.h"
 
 
 // === Ctors =======================================================================================
@@ -44,6 +36,7 @@ Rom::Rom (std::string file)
  */
 bool Rom::calculate_hashes()
 {
+    /*
     try
     {
         // Hash classes for calculating each hash
@@ -91,6 +84,7 @@ bool Rom::calculate_hashes()
     {
         std::cerr << e.what() << std::endl;
     }
+    */
     return false;
 }
 
