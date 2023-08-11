@@ -12,7 +12,7 @@
 
 
 /**
- * Typical header of XML dat files containing hash data. Should be the first line of the file.
+ * Typical signature of XML dat files containing hash data. Should be the first line of the file.
  */
 static const std::string XML_SIGNATURE = "<?xml version=\"1.0\"?>";
 
@@ -49,5 +49,6 @@ private:
 
 bool validate_xml (const std::string &);
 bool check_xml_signature (const std::string &);
+bool check_tag (const std::string &, const std::string &, bool);
 
 #endif

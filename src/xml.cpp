@@ -53,8 +53,10 @@ bool Xml::import_xml (const std::string &f_name)
  */
 bool validate_xml (const std::string &xml_text)
 {
-    return (check_xml_signature (xml_text));
+    return (check_xml_signature (xml_text) &&
+            check_tag (xml_text, "datafile", true));
 }
+
 
 /**
  * @brief Checks for the presence of an XML signature in the file text.
@@ -65,9 +67,45 @@ bool validate_xml (const std::string &xml_text)
  * 
  * @see XML_SIGNATURE
  */
-bool check_xml_signature (const std::string & xml_text)
+bool check_xml_signature (const std::string &xml_text)
 {
     std::string test_signature = xml_text.substr (0, XML_SIGNATURE.size());
 
     return (test_signature == XML_SIGNATURE);
+}
+
+
+/**
+ * @brief Checks for the presence of a given tag.
+ * 
+ * @param xml_text The XML text to be searched.
+ * @param tag The tag to be searched for.
+ * @param ignore_attributes If attributes after the start tag should be ignored.
+ * 
+ * @note The tag should just be the text contained within and not include the tag start or tag end
+ *       brackets.
+ * 
+ * @returns If the tag specified is found in the given text and if the start and end tags
+ *          corresponding to it are in valid positions.
+ */
+bool check_tag (const std::string &xml_text, const std::string &tag, bool ignore_attributes)
+{
+    // HACK: This is an easy way force inclusion or exclusion of tags with attributes
+    std::string tag_start = "";
+    if (ignore_attributes)
+        tag_start = "<" + tag;
+    else
+        tag_start = "<" + tag + ">";
+    const std::string tag_end = "</" + tag + ">";
+
+    // Look for the start and end tags
+    unsigned int start_pos = 0, end_pos = 0;
+    start_pos = xml_text.find(tag_start, 0);
+    end_pos = xml_text.find (tag_end, 0);
+
+    // Check failed if start or end tag could not be found OR start tag was found after end tag
+    if ((start_pos == std::string::npos) || (end_pos == std::string::npos) || (start_pos >= end_pos))
+        return false;
+    
+    return true;
 }
