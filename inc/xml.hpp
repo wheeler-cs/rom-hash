@@ -14,7 +14,7 @@
 /**
  * Typical header of XML dat files containing hash data. Should be the first line of the file.
  */
-static const std::string XML_HEADER = "<?xml version=\"1.0\"?>";
+static const std::string XML_SIGNATURE = "<?xml version=\"1.0\"?>";
 
 
 // === Class definitions ===========================================================================
@@ -46,5 +46,8 @@ private:
     std::vector <Rom> imported_data;
 };
 
+
+bool validate_xml (const std::string &);
+bool check_xml_signature (const std::string &);
 
 #endif
