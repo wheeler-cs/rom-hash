@@ -5,7 +5,10 @@
 
 
 // === Ctors =======================================================================================
-
+Xml::Xml (const std::string &file_name)
+{
+    import_xml (file_name);
+}
 
 // === Member methods ==============================================================================
 
@@ -35,6 +38,9 @@ bool Xml::import_xml (const std::string &f_name)
     // Validate that XML text is usable
     if (!(validate_xml (xml_text)))
         return false;
+
+    std::string header_data = get_tag_subtext (xml_text, "header", false);
+    std::cout << header_data << std::endl;
 
     return true;
 }
@@ -108,4 +114,54 @@ bool check_tag (const std::string &xml_text, const std::string &tag, bool ignore
         return false;
     
     return true;
+}
+
+
+/**
+ * @brief Returns the raw text content stored between two tags.
+ * 
+ * @param xml_text The XML text containing the subtext to extract.
+ * @param tag The tags that contain the desired text.
+ * @param ignore_attributes If attributes should be ignored for the start tag.
+ * 
+ * @returns A string composed of the text found as part of an XML element. If the tag given cannot
+ *          be resolved, the null string is returned instead.
+ */
+std::string get_element_content (const std::string &xml_text, const std::string &tag, bool ignore_attributes)
+{
+    // HACK: This is an easy way force inclusion or exclusion of tags with attributes
+    std::string tag_start = "";
+    if (ignore_attributes)
+        tag_start = "<" + tag;
+    else
+        tag_start = "<" + tag + ">";
+    const std::string tag_end = "</" + tag + ">";
+
+    // Look for the start and end tags
+    unsigned int start_pos = 0, end_pos = 0;
+    start_pos = xml_text.find(tag_start, 0);
+    end_pos = xml_text.find (tag_end, 0);
+
+    // Check failed if start or end tag could not be found OR start tag was found after end tag
+    if ((start_pos == std::string::npos) || (end_pos == std::string::npos) || (start_pos >= end_pos))
+        return "";
+
+    // Set start position to location of '>' for start tag; ignoring attributes requires finding
+    // the next instance of that character, which means skipping over the attributes of the tag
+    if (ignore_attributes)
+    {
+        for (unsigned int i = start_pos; i < end_pos; i++)
+        {
+            if (xml_text[i] == '>')
+            {
+                start_pos = i + 1;
+                break;
+            }
+        }
+    }
+    else
+        start_pos += tag_start.size();
+
+    // Create the substring of data stored between the tag's open and close
+    return (xml_text.substr (start_pos, end_pos));
 }
