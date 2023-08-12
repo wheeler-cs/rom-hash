@@ -58,11 +58,38 @@ bool Xml::import_xml (const std::string &f_name)
 
 
 /**
+ * @brief Load the element contents for each header tag into the calling instance's header_data.
  * 
+ * @param header_content The XML-formatted text of the header that contains tags to be extracted.
  */
 void Xml::process_header_data (const std::string &header_content)
 {
+    // Get a list of tags in the header text
     std::vector <std::string> tag_list = generate_tag_list (header_content);
+
+    std::string tag_content = "";
+    // Extract element content text associated with tags
+    for (unsigned int i = 0, list_size = tag_list.size(); i < list_size; i++)
+    {
+        tag_content = get_element_content (header_content, tag_list[i], true);
+        if (tag_content != "")
+        {
+            std::pair <std::string, std::string> tag_data (tag_list[i], tag_content);
+            header_data.push_back (tag_data); // New tag added
+        }
+    }
+}
+
+/**
+ * @brief Iterates through and prints out each tag and it's associated content stored in the
+ *        header_data vector of the calling instance.
+ */
+void Xml::print_header_data()
+{
+    for (unsigned int i, list_size = header_data.size(); i < list_size; i++)
+    {
+        std::cout << header_data[i].first << " | " << header_data[i].second << '\n';
+    }
 }
 
 // === Functions ===================================================================================
@@ -157,7 +184,7 @@ std::string get_element_content (const std::string &xml_text, const std::string 
     const std::string tag_end = "</" + tag + ">";
 
     // Look for the start and end tags
-    unsigned int start_pos = 0, end_pos = 0;
+    size_t start_pos = 0, end_pos = 0;
     start_pos = xml_text.find (tag_start, 0);
     if (start_pos == std::string::npos)
         return "";

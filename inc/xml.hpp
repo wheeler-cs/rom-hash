@@ -35,6 +35,8 @@ public:
     bool import_xml (const std::string &);
     void process_header_data (const std::string &);
 
+    // Print methods
+    void print_header_data();
 
 private:
     std::vector <std::pair <std::string, std::string>> header_data;
