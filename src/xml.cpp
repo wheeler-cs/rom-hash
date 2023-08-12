@@ -35,16 +35,35 @@ bool Xml::import_xml (const std::string &f_name)
     }
     xml_read.close();
 
+    // Preprocess text to remove certain characters that can be problematic
+    for (unsigned int i = 0, xml_len = xml_text.size(); i < xml_len; i++)
+    {
+        if ((xml_text[i] == 0x15) || (xml_text[i] == '\n') || (xml_text[i] == '\t'))
+            xml_text[i] = ' ';
+    }
+
     // Validate that XML text is usable
     if (!(validate_xml (xml_text)))
         return false;
 
-    std::string header_data = get_tag_subtext (xml_text, "header", false);
-    std::cout << header_data << std::endl;
+    // Create index of header data (if header data exists)
+    std::vector <std::string> header_tags;
+    std::string header_contents = get_element_content (xml_text, "header", false);
+    if (header_contents != "")
+        process_header_data (header_contents);
+
 
     return true;
 }
 
+
+/**
+ * 
+ */
+void Xml::process_header_data (const std::string &header_content)
+{
+    std::vector <std::string> tag_list = generate_tag_list (header_content);
+}
 
 // === Functions ===================================================================================
 
@@ -139,11 +158,11 @@ std::string get_element_content (const std::string &xml_text, const std::string 
 
     // Look for the start and end tags
     unsigned int start_pos = 0, end_pos = 0;
-    start_pos = xml_text.find(tag_start, 0);
-    end_pos = xml_text.find (tag_end, 0);
-
-    // Check failed if start or end tag could not be found OR start tag was found after end tag
-    if ((start_pos == std::string::npos) || (end_pos == std::string::npos) || (start_pos >= end_pos))
+    start_pos = xml_text.find (tag_start, 0);
+    if (start_pos == std::string::npos)
+        return "";
+    end_pos = xml_text.find (tag_end, start_pos);
+    if (end_pos == std::string::npos)
         return "";
 
     // Set start position to location of '>' for start tag; ignoring attributes requires finding
@@ -154,7 +173,7 @@ std::string get_element_content (const std::string &xml_text, const std::string 
         {
             if (xml_text[i] == '>')
             {
-                start_pos = i + 1;
+                start_pos = i + 1; // Incr. by 1 to align correctly
                 break;
             }
         }
@@ -162,6 +181,42 @@ std::string get_element_content (const std::string &xml_text, const std::string 
     else
         start_pos += tag_start.size();
 
-    // Create the substring of data stored between the tag's open and close
-    return (xml_text.substr (start_pos, end_pos));
+    // Return the substring of data stored between the tag's open and close
+    return (xml_text.substr (start_pos, (end_pos - start_pos)));
+}
+
+
+/**
+ * @brief Obtains a list of tags found in the XML text passed in.
+ * 
+ * @param text Some XML text with a number of tags.
+ * 
+ * @returns A vector of strings containing all of the tags found in the given text.
+ */
+std::vector <std::string> generate_tag_list (const std::string &text)
+{
+    std::vector <std::string> tag_list;
+
+    // Linear search through text to find all tags
+    unsigned int text_length = text.size();
+    for (unsigned int i = 0; i < text_length; i++)
+    {
+        // Only do this if it's a start tag
+        if ((text[i] == '<') && (text[i + 1] != '/'))
+        {
+            std::string tag = "";
+            // Linear search from start tag until end of tag name
+            for (unsigned int j = i + 1; j < text_length; j++)
+            {
+                if ((text[j] == '>') || (text[j] == '/') || (text[j] == ' '))
+                    break;
+                else
+                    tag += text[j];
+            }
+
+            tag_list.push_back (tag);
+            i += tag.size();
+        }
+    }
+    return tag_list;
 }

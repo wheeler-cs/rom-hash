@@ -30,12 +30,14 @@ public:
 
     // Mutators
 
+
     // Member methods
     bool import_xml (const std::string &);
+    void process_header_data (const std::string &);
 
 
 private:
-    std::pair <std::string, std::string> header_data;
+    std::vector <std::pair <std::string, std::string>> header_data;
 };
 
 
@@ -43,5 +45,6 @@ bool validate_xml (const std::string &);
 bool check_xml_signature (const std::string &);
 bool check_tag (const std::string &, const std::string &, bool);
 std::string get_element_content (const std::string &, const std::string &, bool);
+std::vector <std::string> generate_tag_list (const std::string &);
 
 #endif
