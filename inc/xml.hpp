@@ -27,9 +27,9 @@ public:
     Xml (const std::string &);
 
     // Accessors
+    std::string get_tag (const std::string &);
 
     // Mutators
-
 
     // Member methods
     bool import_xml (const std::string &);

@@ -5,10 +5,36 @@
 
 
 // === Ctors =======================================================================================
+
+/**
+ * @brief Initializes an instance of Xml class by using a specific file as input.
+ */
 Xml::Xml (const std::string &file_name)
 {
     import_xml (file_name);
 }
+
+// === Accessors ===================================================================================
+
+/**
+ * @brief Linearly searches for the supplied tag in the list of header data.
+ * 
+ * @param query_tag The tag to search for within header_data
+ * 
+ * @returns The data associated with the given tag, or the empty string if the tag isn't found.
+ */
+std::string Xml::get_tag (const std::string &query_tag)
+{
+    std::string ret_string = "";
+    for (unsigned int i = 0, limit = header_data.size(); i < limit; i++)
+    {
+        if (query_tag == header_data[i].first)
+            ret_string = header_data[i].second;
+    }
+
+    return ret_string;
+}
+
 
 // === Member methods ==============================================================================
 
@@ -228,7 +254,7 @@ std::vector <std::string> generate_tag_list (const std::string &text)
     unsigned int text_length = text.size();
     for (unsigned int i = 0; i < text_length; i++)
     {
-        // Only do this if it's a start tag
+        // Add tag text if tag found is a start tag
         if ((text[i] == '<') && (text[i + 1] != '/'))
         {
             std::string tag = "";
