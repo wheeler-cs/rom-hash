@@ -30,6 +30,7 @@ public:
     std::string get_tag (const std::string &);
 
     // Mutators
+    void reset();
 
     // Member methods
     bool import_xml (const std::string &);

@@ -39,3 +39,7 @@ clean:
 
 run:
 	$(BLD)/$(TARGET)
+
+test:
+	$(BLD)/$(TARGET) hashes/GameBoyAdvance.dat
+	$(BLD)/$(TARGET) hashes/PlayStation.dat

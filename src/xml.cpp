@@ -11,7 +11,7 @@
  */
 Xml::Xml (const std::string &file_name)
 {
-    import_xml (file_name);
+    this->import_xml (file_name);
 }
 
 // === Accessors ===================================================================================
@@ -26,13 +26,25 @@ Xml::Xml (const std::string &file_name)
 std::string Xml::get_tag (const std::string &query_tag)
 {
     std::string ret_string = "";
-    for (unsigned int i = 0, limit = header_data.size(); i < limit; i++)
+    for (unsigned int i = 0, limit = this->header_data.size(); i < limit; i++)
     {
-        if (query_tag == header_data[i].first)
-            ret_string = header_data[i].second;
+        if (query_tag == this->header_data[i].first)
+            ret_string = this->header_data[i].second;
     }
 
     return ret_string;
+}
+
+
+// === Mutators ====================================================================================
+
+/**
+ * @brief Resets the member data of the calling Xml class. This is often done when new data is to be
+ *        imported.
+ */
+void Xml::reset()
+{
+    this->header_data.clear();
 }
 
 
@@ -47,6 +59,8 @@ std::string Xml::get_tag (const std::string &query_tag)
  */
 bool Xml::import_xml (const std::string &f_name)
 {
+    this->reset();
+
     // Open file stream for XML file
     std::ifstream xml_read (f_name.c_str());
     if (!(xml_read.is_open()))
@@ -59,7 +73,7 @@ bool Xml::import_xml (const std::string &f_name)
     {
         xml_text += buffer_str;
     }
-    xml_read.close();
+    xml_read.close(); // Done with file buffer
 
     // Preprocess text to remove certain characters that can be problematic
     for (unsigned int i = 0, xml_len = xml_text.size(); i < xml_len; i++)
@@ -76,7 +90,7 @@ bool Xml::import_xml (const std::string &f_name)
     std::vector <std::string> header_tags;
     std::string header_contents = get_element_content (xml_text, "header", false);
     if (header_contents != "")
-        process_header_data (header_contents);
+        this->process_header_data (header_contents);
 
 
     return true;
@@ -92,6 +106,8 @@ void Xml::process_header_data (const std::string &header_content)
 {
     // Get a list of tags in the header text
     std::vector <std::string> tag_list = generate_tag_list (header_content);
+    if (tag_list.size() == 0)
+        return;
 
     std::string tag_content = "";
     // Extract element content text associated with tags
@@ -101,7 +117,7 @@ void Xml::process_header_data (const std::string &header_content)
         if (tag_content != "")
         {
             std::pair <std::string, std::string> tag_data (tag_list[i], tag_content);
-            header_data.push_back (tag_data); // New tag added
+            this->header_data.push_back (tag_data); // New tag added
         }
     }
 }
@@ -112,9 +128,9 @@ void Xml::process_header_data (const std::string &header_content)
  */
 void Xml::print_header_data()
 {
-    for (unsigned int i, list_size = header_data.size(); i < list_size; i++)
+    for (unsigned int i, list_size = this->header_data.size(); i < list_size; i++)
     {
-        std::cout << header_data[i].first << " | " << header_data[i].second << '\n';
+        std::cout << this->header_data[i].first << " | " << this->header_data[i].second << '\n';
     }
 }
 
