@@ -49,5 +49,7 @@ bool check_xml_signature (const std::string &);
 bool check_tag (const std::string &, const std::string &, bool);
 std::string get_element_content (const std::string &, const std::string &, bool);
 std::vector <std::string> generate_tag_list (const std::string &);
+std::vector <unsigned int> subdivide_xml (const std::string &, const std::string &, bool);
+std::vector <std::pair <std::string, std::string>> get_attributes (const std::string &, const std::string &);
 
 #endif

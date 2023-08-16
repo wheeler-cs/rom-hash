@@ -14,6 +14,7 @@ Xml::Xml (const std::string &file_name)
     this->import_xml (file_name);
 }
 
+
 // === Accessors ===================================================================================
 
 /**
@@ -78,6 +79,7 @@ bool Xml::import_xml (const std::string &f_name)
     // Preprocess text to remove certain characters that can be problematic
     for (unsigned int i = 0, xml_len = xml_text.size(); i < xml_len; i++)
     {
+        // NOTE: 0x15 is carridge return
         if ((xml_text[i] == 0x15) || (xml_text[i] == '\n') || (xml_text[i] == '\t'))
             xml_text[i] = ' ';
     }
@@ -92,6 +94,15 @@ bool Xml::import_xml (const std::string &f_name)
     if (header_contents != "")
         this->process_header_data (header_contents);
 
+    // Index where each <game> block is and extract the data within
+    std::vector <unsigned int> block_starts = subdivide_xml (xml_text, "game", true);
+    std::string block_data = "";
+    std::vector <std::pair <std::string, std::string>> attribute_data;
+    for (unsigned int i = 0, v_size = block_starts.size(); i < v_size; i++)
+    {
+        block_data = xml_text.substr (block_starts[i], (block_starts[i+1] - block_starts[i]));
+        attribute_data = get_attributes (block_data, "rom");
+    }
 
     return true;
 }
@@ -122,6 +133,7 @@ void Xml::process_header_data (const std::string &header_content)
     }
 }
 
+
 /**
  * @brief Iterates through and prints out each tag and it's associated content stored in the
  *        header_data vector of the calling instance.
@@ -133,6 +145,7 @@ void Xml::print_header_data()
         std::cout << this->header_data[i].first << " | " << this->header_data[i].second << '\n';
     }
 }
+
 
 // === Functions ===================================================================================
 
@@ -288,4 +301,93 @@ std::vector <std::string> generate_tag_list (const std::string &text)
         }
     }
     return tag_list;
+}
+
+
+/**
+ * @brief Subdivides the content of an XML file into blocks by creating a list of positions where a
+ *        given start tag can be found in the text.
+ * @param xml_text The raw XML-formatted text to be searched.
+ * @param tag The value of the start tag to be searched for.
+ * @param ignore_attributes Whether attributes should be ignored when searching for the start tag,
+ *        or the <tag> should be searched for verbatium.
+ * 
+ * @returns A vector containing the indices of where the tag can be found within the text.
+ * 
+ */
+std::vector <unsigned int> subdivide_xml (const std::string &xml_text, const std::string &tag, bool ignore_attributes)
+{
+    // Do not search for the '>' if ignoring attributes
+    std::string tag_start = "";
+    if (ignore_attributes)
+        tag_start = '<' + tag;
+    else
+        tag_start = '<' + tag + '>';
+
+    std::vector <unsigned int> block_locations;
+    size_t block_start = 0;
+
+    // Search for all instances of <tag> and generate an index
+    block_start = xml_text.find (tag_start, block_start);
+    while (block_start != std::string::npos)
+    {
+        block_locations.push_back ((unsigned int) block_start);
+        block_start = xml_text.find (tag_start, block_start + 1);
+    }
+
+    return block_locations;
+}
+
+
+/**
+ * @brief Searches the given text for tag specified, and, if found, extracts all attributes from
+ *        the start tag.
+ * 
+ * @param xml_text The XML-format text to be searched.
+ * @param tag The tag containing the parameters to be extracted.
+ * 
+ * @returns A vector of attribute-value pairs associated with the given tag.
+ */
+std::vector <std::pair <std::string, std::string>> get_attributes (const std::string &xml_text, const std::string &tag)
+{
+    std::vector <std::pair <std::string, std::string>> attributes;
+    std::string tag_string = "";
+    size_t tag_start = 0, tag_end = 0;
+
+    // Locate where in the text the tag is contained
+    tag_start = xml_text.find ('<' + tag, 0);
+    if (tag_start == std::string::npos)
+        return attributes;
+    tag_end = xml_text.find ('>', tag_start + 1);
+    if (tag_end == std::string::npos)
+        return attributes;
+
+    // Iterate through tag text and extract each attribute, assuming format of attr=val
+    std::string attribute = "", value = "";
+    size_t val_start = 0, val_end = 0;
+    for (unsigned int i = tag_start; i < tag_end; i++)
+    {
+        if (xml_text[i] == ' ')
+        {
+            // Get the attribute name
+            val_start = xml_text.find ('\"', i);
+            if (val_start == std::string::npos)
+                break;
+            attribute = xml_text.substr (i + 1, (val_start - (i + 2)));
+
+            // Get the attribute value
+            val_end = xml_text.find ('\"', val_start + 1);
+            if (val_end == std::string::npos)
+                break;
+            value = xml_text.substr (val_start + 1, (val_end - (val_start + 1)));
+
+            // Increment i to move past the attribute that was just read
+            i += (val_end - val_start);
+
+            std::pair <std::string, std::string> attribute_data (attribute, value);
+            attributes.push_back (attribute_data);
+        }
+    }
+
+    return attributes;
 }
