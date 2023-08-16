@@ -1,4 +1,5 @@
 #include "file.hpp"
+#include "hash.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -9,8 +10,8 @@
 File::File()
 {
     // File metadata
-    this->file_name = "";
-    this->file_size = 0;
+    this->name = "";
+    this->binary_size = 0;
 
     // Hashes
     this->crc = "";
@@ -20,7 +21,7 @@ File::File()
 
 File::File (std::string file)
 {
-    this->file_name = file;
+    this->name = file;
     // Go ahead and calculate hashes and file size
     this->calculate_file_size();
     this->calculate_hashes();
@@ -47,7 +48,7 @@ bool File::calculate_hashes()
 void File::calculate_file_size()
 {
     // Open a file stream and try to calculate size from std::ios::end
-    std::ifstream f_size_read (file_name.c_str());
+    std::ifstream f_size_read (this->name.c_str());
     if (f_size_read.is_open())
     {
         /**
@@ -56,13 +57,13 @@ void File::calculate_file_size()
          * "Under the hood" implementation of seekg/tellg may make this not work right for you.
          */
         f_size_read.seekg (0, std::ios::end);
-        this->file_size = (uint64_t) f_size_read.tellg();
+        this->binary_size = (uint64_t) f_size_read.tellg();
         f_size_read.close();                        
     }
     else
     {
         // Default to a file size of 0 if a stream cannot be opened
-        this->file_size = 0;
+        this->binary_size = 0;
     }
 }
 
@@ -71,8 +72,8 @@ void File::calculate_file_size()
  */
 void File::print_hashes() const
 {
-    std::cout << "\nFile: " << this->file_name
-              << "\nSize: " << this->file_size
+    std::cout << "\nFile: " << this->name
+              << "\nSize: " << this->binary_size
               << "\n CRC: " << this->crc
               << "\nSHA1: " << this->sha1
               << "\n MD5: " << this->md5
@@ -85,39 +86,39 @@ void File::print_hashes() const
 
 /**
  * @overload ==
+ * 
+ * @brief Checks each attribute of the two File classes, excluding name, and returns if all of those
+ *        values are equal.
+ * 
+ * @param a An instance of the File class.
+ * @param b An instancce of the File class.
+ * 
+ * @returns If all hashes and binary file size of the two parameters are the same.
  */
 bool operator== (const File& a, const File& b)
 {
-    /*
-     * CRC, MD5, SHA1, and file size should match; file names do not necessarily have to match as
-     * this is looking for metadata equality as opposed to literal equality
-     */
-    if ((a.crc == b.crc) &&
-        (a.md5 == b.md5) &&
-        (a.sha1 == b.sha1) &&
-        (a.file_size == b.file_size))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
+    return ((a.crc == b.crc) &&
+            (a.md5 == b.md5) &&
+            (a.sha1 == b.sha1) &&
+            (a.binary_size == b.binary_size));
 }
 
 /**
  * @overload >
+ * 
+ * @brief "Compares" two File class instances and determines which is "greater than" the other.
+ * 
+ * The functionality of this operator is needed if a list of File class instances are to be sorted.
+ * 
+ * @param a An instance of the File class.
+ * @param b An instance of the File class.
+ * 
+ * @returns The evaluation of if a is "greater than" b.
+ * 
+ * @note Attributes are evaluated in this order: crc, md5, sha1, binary_size.
  */
 bool operator> (const File& a, const File& b)
 {
-    /*
-     * Attributes are evaluated in the following order:
-     *  -CRC
-     *  -MD5
-     *  -SHA1
-     *  -File size
-     */
     if (a.crc > b.crc)
         return true;
     else if (a.crc == b.crc)
@@ -130,7 +131,7 @@ bool operator> (const File& a, const File& b)
                 return true;
             else if (a.sha1 == b.sha1)
             {
-                if (a.file_size > b.file_size)
+                if (a.binary_size > b.binary_size)
                     return true;
             }
         }
@@ -141,16 +142,20 @@ bool operator> (const File& a, const File& b)
 
 /**
  * @overload <
+ * 
+ * @brief "Compares" two File class instances and determines which is "less than" the other.
+ * 
+ * The functionality of this operator is needed if a list of File class instances are to be sorted.
+ * 
+ * @param a An instance of the File class.
+ * @param b An instance of the File class.
+ * 
+ * @returns The evaluation of if a is "less than" b.
+ * 
+ * @note Attributes are evaluated in this order: crc, md5, sha1, binary_size.
  */
 bool operator< (const File& a, const File& b)
 {
-    /*
-     * Attributes are evaluated in the following order:
-     *  -CRC
-     *  -MD5
-     *  -SHA1
-     *  -File size
-     */
     if (a.crc < b.crc)
         return true;
     else if (a.crc == b.crc)
@@ -163,7 +168,7 @@ bool operator< (const File& a, const File& b)
                 return true;
             else if (a.sha1 == b.sha1)
             {
-                if (a.file_size < b.file_size)
+                if (a.binary_size < b.binary_size)
                     return true;
             }
         }

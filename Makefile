@@ -19,7 +19,7 @@ $(BLD)/main.o: $(SRC)/main.cpp $(INC)/directory.hpp $(INC)/file.hpp $(INC)/flags
 $(BLD)/directory.o: $(SRC)/directory.cpp $(INC)/directory.hpp $(INC)/file.hpp $(INC)/interface.hpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
 
-$(BLD)/file.o: $(SRC)/file.cpp $(INC)/file.hpp
+$(BLD)/file.o: $(SRC)/file.cpp $(INC)/file.hpp $(INC)/hash.hpp
 	$(CXX) $(CXXFLAGS) $< -o $@ -I$(INC)
 
 $(BLD)/flags.o: $(SRC)/flags.cpp $(INC)/flags.hpp
