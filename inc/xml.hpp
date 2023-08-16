@@ -1,7 +1,7 @@
 #ifndef XML_HPP
 #define XML_HPP
 
-#include "rom.hpp"
+#include "file.hpp"
 
 #include <algorithm>
 #include <cctype>
