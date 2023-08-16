@@ -7,7 +7,7 @@
 #if defined(__unix)
 // === Unix ========================================================================================
 
-unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
+unsigned int gen_dir_index (std::string input_dir, std::vector<File>& dir_index)
 {
     DIR* dir_ptr;
     struct dirent* dir_entity;
@@ -35,7 +35,7 @@ unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
                 // Add path to list if refers to file
                 else if (f_info.st_mode & S_IFREG)
                 {
-                    dir_index.push_back (Rom(full_path));
+                    dir_index.push_back (File(full_path));
                 }
             }
         }
@@ -56,7 +56,7 @@ unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
 // === Windows =====================================================================================
 
 // TODO: Test this...
-unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
+unsigned int gen_dir_index (std::string input_dir, std::vector<File>& dir_index)
 {
     WIN32_FIND_DATAA dat_find;
     HANDLE f_handle = FindFirstFile ((input_dir + "/*.*").c_str(), &dat_find);
@@ -82,7 +82,7 @@ unsigned int gen_dir_index (std::string input_dir, std::vector<Rom>& dir_index)
             else
             {
                 dir_name = input_dir + dat_find.cFileName;
-                dir_index.push_back (Rom(dir_name));
+                dir_index.push_back (File(dir_name));
             }
         } while (FindNextFile (f_handle, &dat_find));
 

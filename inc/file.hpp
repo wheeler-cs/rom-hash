@@ -1,18 +1,16 @@
-#ifndef ROM_HPP
-#define ROM_HPP
-
-#define CRYPTOPP_ENABLE_NAMESPACE_WEAK 1
+#ifndef FILE_HPP
+#define FILE_HPP
 
 #include <cstdint>
 #include <string>
 
 
-class Rom
+class File
 {
 public:
     // Ctors
-    Rom();
-    Rom (std::string);
+    File();
+    File (std::string);
 
     // Mutators; sets member variables
     void set_file_name (const std::string &f_name)  { file_name = f_name; }
@@ -34,9 +32,9 @@ public:
     void print_hashes() const;
 
     // Operator overloads (as friends); allows using things such as "sort" with class
-    friend bool operator== (const Rom&, const Rom&);
-    friend bool operator> (const Rom&, const Rom&);
-    friend bool operator< (const Rom&, const Rom&);
+    friend bool operator== (const File&, const File&);
+    friend bool operator> (const File&, const File&);
+    friend bool operator< (const File&, const File&);
 
 private:
     // File metadata
@@ -51,8 +49,8 @@ private:
 };
 
 
-bool operator== (const Rom&, const Rom&);
-bool operator> (const Rom&, const Rom&);
-bool operator< (const Rom&, const Rom&);
+bool operator== (const File&, const File&);
+bool operator> (const File&, const File&);
+bool operator< (const File&, const File&);
 
 #endif
