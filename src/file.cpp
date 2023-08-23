@@ -27,6 +27,24 @@ File::File (std::string file)
     this->calculate_hashes();
 }
 
+File::File (std::vector <std::pair <std::string, std::string>> attributes)
+{
+    for (unsigned int i = 0, a_size = attributes.size(); i < a_size; i++)
+    {
+        // This feels wrong... but I don't know of another way of comparing a lot of strings...
+        if (attributes[i].first == "name")
+            this->name = attributes[i].second;
+        else if (attributes[i].first == "size")
+            this->binary_size = std::stoi (attributes[i].second); // TODO: Exception-handle this
+        else if (attributes[i].first == "crc")
+            this->crc = attributes[i].second;
+        else if (attributes[i].first == "md5")
+            this->md5 = attributes[i].second;
+        else if (attributes[i].first == "sha1")
+            this->sha1 = attributes[i].second;
+    }
+}
+
 
 // === Member methods ==============================================================================
 

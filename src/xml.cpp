@@ -57,6 +57,8 @@ void Xml::reset()
  * @param f_name Name of the file to be imported.
  * 
  * @returns The success status of the import operation.
+ * 
+ * @todo Wrap some of the code here up into functions.
  */
 bool Xml::import_xml (const std::string &f_name)
 {
@@ -102,6 +104,7 @@ bool Xml::import_xml (const std::string &f_name)
     {
         block_data = xml_text.substr (block_starts[i], (block_starts[i+1] - block_starts[i]));
         attribute_data = get_attributes (block_data, "rom");
+        this->file_entries.push_back (File (attribute_data));   // New File instance with data
     }
 
     return true;

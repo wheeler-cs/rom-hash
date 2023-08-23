@@ -41,6 +41,8 @@ public:
 
 private:
     std::vector <std::pair <std::string, std::string>> header_data;
+
+    std::vector <File> file_entries;
 };
 
 

@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
+#include <vector>
 
 
 class File
@@ -11,6 +13,7 @@ public:
     // Ctors
     File();
     File (std::string);
+    File (std::vector <std::pair <std::string, std::string>>);
 
     // Mutators; sets member variables
     void set_file_name (const std::string &f_name)  { this->name = f_name; }
