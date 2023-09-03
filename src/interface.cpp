@@ -23,5 +23,5 @@ void print_program_usage()
  */
 void print_error (std::string error)
 {
-    std::cerr << error << std::endl;
+    std::cerr << "Error: " << error << std::endl;
 }

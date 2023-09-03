@@ -13,6 +13,16 @@ ProgramFlags::ProgramFlags()
     exit_state = false;
 }
 
+ProgramFlags::ProgramFlags (int argc, char** argv)
+{
+    // Set default data before attempting to load arguments (safeguard)
+    is_silent = false;
+    rom_dir = "roms";
+    hash_dir = "hashes";
+    exit_state = false;
+    this->handle_arguments (argc, argv);
+}
+
 ProgramFlags::ProgramFlags (std::string r_dir, std::string h_dir, bool silence)
 {
     rom_dir = r_dir;

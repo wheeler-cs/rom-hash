@@ -9,7 +9,8 @@ class ProgramFlags
 public:
     // Ctors
     ProgramFlags();
-    ProgramFlags(std::string, std::string, bool);
+    ProgramFlags (int, char**);
+    ProgramFlags (std::string, std::string, bool);
 
     // Accessors; sets member variables
     void set_silence (bool flag)        { is_silent = flag; }

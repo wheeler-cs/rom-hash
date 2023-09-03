@@ -28,6 +28,8 @@ public:
 
     // Accessors
     std::string get_tag (const std::string &);
+    unsigned int get_entry_count() { return this->file_entries.size(); }
+    File get_file_entry (unsigned int);
 
     // Mutators
     void reset();

@@ -18,6 +18,22 @@ Xml::Xml (const std::string &file_name)
 // === Accessors ===================================================================================
 
 /**
+ * @brief Returns the data of the File entry at the given index.
+ * 
+ * @param idx The index of the File data to be pulled from the list the Xml instance stores.
+ * 
+ * @returns A File class instance.
+ * @retval `File()` is returned if provided index is too large for internal `file_entries` list.
+ */
+File Xml::get_file_entry (unsigned int idx)
+{
+    if (idx < this->file_entries.size())
+        return this->file_entries[idx];
+    else
+        return File();
+}
+
+/**
  * @brief Linearly searches for the supplied tag in the list of header data.
  * 
  * @param query_tag The tag to search for within header_data
