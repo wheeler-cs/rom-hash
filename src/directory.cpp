@@ -81,7 +81,8 @@ unsigned int gen_dir_index (std::string input_dir, std::vector<File>& dir_index)
             // File found, add it to the index
             else
             {
-                dir_name = input_dir + dat_find.cFileName;
+                // FIX: Need '/' in full file name
+                dir_name = input_dir + '/' + dat_find.cFileName;
                 dir_index.push_back (File(dir_name));
             }
         } while (FindNextFile (f_handle, &dat_find));

@@ -25,7 +25,7 @@ int main (int argc, char** argv)
             print_error ("You must provide reference data for validation!");
         else
         {
-            std::cout << (xml_ref_data[0].get_file_entry (6)).get_file_name();
+            std::cout << (xml_ref_data[0].get_file_entry (0)).get_file_name();
         }
     }
 
