@@ -54,8 +54,7 @@ File::File (std::vector <std::pair <std::string, std::string>> attributes)
  */
 bool File::calculate_hashes()
 {
-
-    // TODO: Reimplement this
+    this->crc = calc_crc32_file (this->name);
 
     return false;
 }

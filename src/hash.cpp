@@ -65,3 +65,20 @@ uint32_t calc_crc32_str (const std::string &input)
 	// Return CRC, but invert bits first	
 	return (crc ^= 0xffffffff);
 }
+
+
+/**
+ * 
+ */
+__uint128_t calc_md5_str (const std::string &input)
+{
+	// A, B, C, D
+	uint32_t a_ref, b_ref, c_ref, d_ref;
+	a_ref = 0x67452301;
+	b_ref = 0xefcdab89;
+	c_ref = 0x98badcfe;
+	d_ref = 0x10325476;
+
+	// 512-bit block to be hashed
+	uint8_t block [64] = {0x00};
+}
