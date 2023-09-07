@@ -1,5 +1,6 @@
 #include "directory.hpp"
 #include "flags.hpp"
+#include "hash.hpp"
 #include "interface.hpp"
 #include "xml.hpp"
 
@@ -7,6 +8,8 @@
 
 int main (int argc, char** argv)
 {
+    calc_md5_str ("Hello");
+
     // Handle command-line arguments
     ProgramFlags p_state (argc, argv);
     if (!p_state.get_exit_state()) // Skip if arguments weren't formatted properly

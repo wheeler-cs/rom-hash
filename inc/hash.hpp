@@ -120,5 +120,6 @@ static const uint32_t MD5_LOOKUP_TABLE [64]
 
 uint32_t calc_crc32_file (const std::string &);
 uint32_t calc_crc32_str (const std::string &);
+uint32_t* calc_md5_str (const std::string &);
 
 #endif
